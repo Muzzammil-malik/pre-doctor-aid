@@ -1,7 +1,7 @@
 import "@tanstack/react-start";
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
+import { createGroqProvider } from "@/lib/ai-gateway";
 
 const SYSTEM_PROMPT = `You are a professional Medical Triage Assistant.
 
@@ -42,13 +42,16 @@ export const Route = createFileRoute("/api/chat")({
           return new Response("Messages are required", { status: 400 });
         }
 
-        const key = process.env.LOVABLE_API_KEY;
+        const key = process.env.GROQ_API_KEY;
         if (!key) {
-          return new Response("Missing LOVABLE_API_KEY", { status: 500 });
+          return new Response(
+            "Missing GROQ_API_KEY. Add it to your .env file (get one at https://console.groq.com/keys).",
+            { status: 500 },
+          );
         }
 
-        const gateway = createLovableAiGatewayProvider(key);
-        const model = gateway("google/gemini-3-flash-preview");
+        const groq = createGroqProvider(key);
+        const model = groq("llama3-70b-8192");
 
         // Low temperature keeps medical-style replies conservative and consistent.
         const result = streamText({

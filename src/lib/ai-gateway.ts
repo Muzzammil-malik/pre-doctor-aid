@@ -1,9 +1,14 @@
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 
-export function createLovableAiGatewayProvider(apiKey: string) {
+/**
+ * Groq provider (OpenAI-compatible).
+ * Get your API key at https://console.groq.com/keys
+ * and put it in `.env` as GROQ_API_KEY=...
+ */
+export function createGroqProvider(apiKey: string) {
   return createOpenAICompatible({
-    name: "lovable-ai-gateway",
-    baseURL: "https://ai.gateway.lovable.dev/v1",
-    headers: { "Lovable-API-Key": apiKey },
+    name: "groq",
+    baseURL: "https://api.groq.com/openai/v1",
+    headers: { Authorization: `Bearer ${apiKey}` },
   });
 }
